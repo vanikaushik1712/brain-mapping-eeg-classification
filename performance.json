@@ -1,0 +1,17 @@
+{
+  "benchmarks": {
+    "classification_time_target": 2.0,
+    "memory_usage_limit_mb": 500,
+    "concurrent_users_max": 10
+  },
+  "thresholds": {
+    "normal_sensitivity": 600,
+    "high_sensitivity": 400,
+    "conservative": 800
+  },
+  "optimization": {
+    "enable_caching": false,
+    "parallel_processing": false,
+    "memory_optimization": true
+  }
+}
