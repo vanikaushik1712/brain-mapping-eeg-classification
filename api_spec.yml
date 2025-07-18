@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  title: Brain Mapping EEG Classification API
+  description: REST API for EEG signal classification
+  version: 1.0.0
+  contact:
+    name: Brain Mapping EEG Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:9999
+    description: Local development server
+
+paths:
+  /:
+    get:
+      summary: Main application interface
+      responses:
+        '200':
+          description: HTML interface
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /upload:
+    post:
+      summary: Upload and classify EEG image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Classification result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassificationResult'
+
+  /info:
+    get:
+      summary: Get system information
+      responses:
+        '200':
+          description: System status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemInfo'
+
+components:
+  schemas:
+    ClassificationResult:
+      type: object
+      properties:
+        classification:
+          type: string
+          enum: [Normal, Abnormal]
+        confidence:
+          type: string
+        min_mse:
+          type: number
+        matched_frame:
+          type: integer
+
+    SystemInfo:
+      type: object
+      properties:
+        reference_patterns_loaded:
+          type: integer
+        wavelet_type:
+          type: string
+        classification_threshold:
+          type: number

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Mapping EEG Classification System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Brain Mapping EEG Classification System</h1>
+            <p class="subtitle">2013 MATLAB Technology Project - Python Implementation</p>
+            <p class="description">
+                This system analyzes EEG (electroencephalograph) signals using 2D Discrete Wavelet Transform 
+                to classify brain patterns as normal or abnormal.
+            </p>
+        </header>
+
+        <div class="main-content">
+            <!-- System Status -->
+            <div class="status-panel">
+                <h3>System Status</h3>
+                <div id="system-status">
+                    <p>Loading system information...</p>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h3>Upload EEG Spectrogram</h3>
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-content">
+                        <p>Drag and drop an EEG spectrogram image here</p>
+                        <p>or</p>
+                        <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.bmp" style="display: none;">
+                        <button id="browse-btn" class="btn btn-primary">Browse Files</button>
+                        <p class="file-info">Supported formats: PNG, JPG, JPEG, BMP (Max: 16MB)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Samples Section -->
+            <div class="demo-section">
+                <h3>Try Demo Samples</h3>
+                <p>Test the system with pre-generated synthetic EEG patterns:</p>
+                <div class="test-samples" id="test-samples">
+                    {% if test_samples %}
+                        {% for sample in test_samples %}
+                        <button class="btn btn-sample" data-sample="{{ sample }}">
+                            {{ sample.replace('_', ' ').title() }}
+                        </button>
+                        {% endfor %}
+                    {% else %}
+                        <p>No test samples available. <button id="generate-data-btn" class="btn btn-secondary">Generate Data</button></p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="results-section" style="display: none;">
+                <h3>Classification Results</h3>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h4>Classification</h4>
+                        <div id="classification-result" class="result-value">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Confidence</h4>
+                        <div id="confidence-result" class="result-value">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>MSE Value</h4>
+                        <div id="mse-result" class="result-value">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Matched Frame</h4>
+                        <div id="frame-result" class="result-value">-</div>
+                    </div>
+                </div>
+
+                <!-- Detailed Results -->
+                <div class="detailed-results">
+                    <h4>MSE Comparison with Reference Patterns</h4>
+                    <div id="mse-chart">
+                        <canvas id="mse-canvas" width="600" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Image Display -->
+                <div class="image-display">
+                    <h4>Processed Image</h4>
+                    <div id="processed-image">
+                        <img id="result-image" src="" alt="Processed EEG Image" style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Algorithm Explanation -->
+            <div class="algorithm-section">
+                <h3>Algorithm Overview</h3>
+                <div class="algorithm-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Image Preprocessing</h4>
+                            <p>Convert to grayscale and resize to 256×256 pixels</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>2D Discrete Wavelet Transform</h4>
+                            <p>Apply 3-level DWT using Daubechies 'db1' wavelet</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Feature Extraction</h4>
+                            <p>Extract approximation and detail coefficients</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Pattern Matching</h4>
+                            <p>Calculate MSE with reference normal patterns</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Classification</h4>
+                            <p>If MSE < 0.5: Normal, else: Abnormal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing EEG pattern...</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                Based on "Brain Mapping Using MATLAB Technology" (2013) by Pranay J. Pandey, Sumit S. Madhav, Vishal D. More
+                <br>
+                Python implementation using Flask, PyWavelets, NumPy, and Matplotlib
+            </p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
